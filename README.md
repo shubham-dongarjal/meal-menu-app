@@ -9,13 +9,13 @@ Employees can log in via **magic links or Google**, view daily menus, and submit
 ## 📸 Screenshots
 
 ### 🔐 Magic Link Login
-![Magic Link Login](screenshots/magic-login.png)
+<img width="959" alt="image" src="https://github.com/user-attachments/assets/450cc673-82ad-4cfb-a7c8-b3669c368668" />
 
 ### 📅 Daily Menu Dashboard
-![Dashboard](screenshots/dashboard.png)
+<img width="959" alt="image" src="https://github.com/user-attachments/assets/4c40cf55-a88e-4864-a506-3c52319d737c" />
 
 ### 📋 Employee Response Summary
-![Employee Responses](screenshots/responses.png)
+<img width="959" alt="image" src="https://github.com/user-attachments/assets/c6972827-b84b-400c-8c87-736c361eb8d9" />
 
 ---
 
@@ -40,7 +40,7 @@ Employees can log in via **magic links or Google**, view daily menus, and submit
 | Authentication| Devise + Magic Link + OmniAuth  |
 | Styling       | Bootstrap 5.3 + Bootstrap Icons |
 | Excel Export  | Axlsx / caxlsx                  |
-| Database      | SQLite3 / PostgreSQL            |
+| Database      | MySQL           |
 | Frontend      | Turbo / Hotwire                 |
 
 ---
@@ -103,14 +103,6 @@ Employee: Can view menu and submit response
 📅 Weekly menu planning
 
 🔔 Email reminders
-
-📊 Analytics dashboard
-
-🤝 Contributing
-PRs are welcome! Please open an issue first to discuss any major changes.
-
-📄 License
-MIT License
 
 ✨ Credits
 Made with ❤️ by Shubham Dongarjal
