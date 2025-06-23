@@ -1,24 +1,116 @@
-# README
+# 🍽️ Meal Menu Booking System
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+A full-stack **Ruby on Rails** application for managing daily employee food menu bookings.
 
-Things you may want to cover:
+Employees can log in via **magic links or Google**, view daily menus, and submit responses. Admins can manage menus, view responses, and export data to Excel.
 
-* Ruby version
+---
 
-* System dependencies
+## 📸 Screenshots
 
-* Configuration
+### 🔐 Magic Link Login
+![Magic Link Login](screenshots/magic-login.png)
 
-* Database creation
+### 📅 Daily Menu Dashboard
+![Dashboard](screenshots/dashboard.png)
 
-* Database initialization
+### 📋 Employee Response Summary
+![Employee Responses](screenshots/responses.png)
 
-* How to run the test suite
+---
 
-* Services (job queues, cache servers, search engines, etc.)
+## 🚀 Features
 
-* Deployment instructions
+- ✅ Magic link login via email
+- ✅ Google OAuth login via OmniAuth
+- ✅ Daily menu creation (Admin)
+- ✅ Responsive dashboard
+- ✅ Role-based access (Admin, Employee)
+- ✅ Export responses to Excel
+- ✅ Bootstrap 5.3 UI with icons
+- ✅ Fully customizable and extendable
 
-* ...
+---
+
+## 🛠️ Tech Stack
+
+| Layer         | Technology                      |
+| ------------- | ------------------------------- |
+| Backend       | Ruby on Rails                   |
+| Authentication| Devise + Magic Link + OmniAuth  |
+| Styling       | Bootstrap 5.3 + Bootstrap Icons |
+| Excel Export  | Axlsx / caxlsx                  |
+| Database      | SQLite3 / PostgreSQL            |
+| Frontend      | Turbo / Hotwire                 |
+
+---
+
+## 🧑‍💻 Setup Instructions
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/YOUR_USERNAME/meal-menu-app.git
+cd meal-menu-app
+2. Install Dependencies
+bash
+Copy
+Edit
+bundle install
+yarn install # if using js bundling
+3. Set up the Database
+bash
+Copy
+Edit
+rails db:create db:migrate
+4. Start the Server
+bash
+Copy
+Edit
+rails server
+Visit: http://localhost:3000
+
+🔐 Environment Setup
+Create a .env file for local environment variables:
+
+dotenv
+Copy
+Edit
+GMAIL_USERNAME=your_gmail@gmail.com
+GMAIL_PASSWORD=your_gmail_app_password
+DEVISE_SECRET_KEY=your_devise_secret
+GOOGLE_CLIENT_ID=your_google_client_id
+GOOGLE_CLIENT_SECRET=your_google_secret
+Make sure these are not committed. .env is in .gitignore.
+
+📤 Export to Excel
+Admins can export responses:
+
+Entire dataset
+
+Or by selected date
+
+Excel files are generated using Axlsx.
+
+👥 Roles
+Admin: Full access (menus, responses, export)
+
+Employee: Can view menu and submit response
+
+🚧 TODO / Future Features
+📱 Mobile-friendly UI
+
+📅 Weekly menu planning
+
+🔔 Email reminders
+
+📊 Analytics dashboard
+
+🤝 Contributing
+PRs are welcome! Please open an issue first to discuss any major changes.
+
+📄 License
+MIT License
+
+✨ Credits
+Made with ❤️ by Shubham Dongarjal
