@@ -1,0 +1,91 @@
+<div class="account-edit-wrapper">
+  <div class="account-edit-container">
+    <div class="account-edit-box">
+      <h2 class="account-title">Update Your Account</h2>
+      <p class="account-subtitle mb-4">Manage your profile settings</p>
+
+      <%= form_for(resource, as: resource_name, url: registration_path(resource_name),
+                   html: { method: :put, class: "account-form" }) do |f| %>
+
+        <%= render "devise/shared/error_messages", resource: resource %>
+
+        <!-- Email -->
+        <div class="mb-3">
+          <label class="account-label"><i class="bi bi-envelope me-2"></i>Email Address</label>
+          <%= f.email_field :email, class: "account-input", autofocus: true, autocomplete: "email" %>
+        </div>
+
+        <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
+          <div class="alert alert-warning d-flex align-items-center">
+            <i class="bi bi-exclamation-triangle me-2"></i>
+            <div>Waiting confirmation for: <strong><%= resource.unconfirmed_email %></strong></div>
+          </div>
+        <% end %>
+
+        <!-- New Password -->
+        <div class="mb-3 position-relative">
+          <label class="account-label"><i class="bi bi-lock me-2"></i>New Password</label>
+          <small class="text-muted d-block mb-1">(Leave blank if unchanged)</small>
+          <%= f.password_field :password, class: "account-input pe-5", id: "new_password", autocomplete: "new-password" %>
+          <button type="button" class="password-toggle toggle-new-password" id="toggleNewPassword">
+            <i class="bi bi-eye"></i>
+          </button>
+          <% if @minimum_password_length %>
+            <small class="text-muted"><%= @minimum_password_length %> characters minimum</small>
+          <% end %>
+        </div>
+
+        <!-- Confirm Password -->
+        <div class="mb-3 position-relative">
+          <label class="account-label"><i class="bi bi-lock-fill me-2"></i>Confirm Password</label>
+          <%= f.password_field :password_confirmation, class: "account-input pe-5", id: "confirm_password", autocomplete: "new-password" %>
+          <button type="button" class="password-toggle toggle-confirm-password" id="toggleConfirmPassword">
+            <i class="bi bi-eye"></i>
+          </button>
+        </div>
+
+        <!-- Current Password -->
+        <div class="mb-4 position-relative">
+          <label class="account-label"><i class="bi bi-shield-lock me-2"></i>Current Password</label>
+          <small class="text-muted d-block mb-1">(Required to save changes)</small>
+          <%= f.password_field :current_password, class: "account-input pe-5", id: "current_password", autocomplete: "current-password" %>
+          <button type="button" class="password-toggle toggle-current-password" id="toggleCurrentPassword">
+            <i class="bi bi-eye"></i>
+          </button>
+        </div>
+
+        <%= f.submit "Update Account", class: "btn btn-primary w-100" %>
+      <% end %>
+
+      <div class="text-center pt-3">
+        <%= button_to "Delete My Account", registration_path(resource_name),
+                      method: :delete,
+                      data: { confirm: "Are you sure? This cannot be undone." },
+                      class: "btn btn-outline-danger w-100 mb-2" %>
+        <%= link_to "Back to Home", root_path, class: "account-link" %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function setupPasswordToggle(inputId, toggleBtnId) {
+    const input = document.getElementById(inputId);
+    const toggle = document.getElementById(toggleBtnId);
+    if (!input || !toggle) return;
+
+    toggle.addEventListener("click", function () {
+      const icon = this.querySelector("i");
+      const isHidden = input.type === "password";
+      input.type = isHidden ? "text" : "password";
+      icon.classList.toggle("bi-eye", !isHidden);
+      icon.classList.toggle("bi-eye-slash", isHidden);
+    });
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    setupPasswordToggle("new_password", "toggleNewPassword");
+    setupPasswordToggle("confirm_password", "toggleConfirmPassword");
+    setupPasswordToggle("current_password", "toggleCurrentPassword");
+  });
+</script>

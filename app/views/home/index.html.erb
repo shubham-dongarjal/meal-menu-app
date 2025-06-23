@@ -1,0 +1,185 @@
+<div class="dashboard-container">
+  <!-- Hero Section -->
+  <div class="dashboard-hero rounded-4 mb-4" style="background: linear-gradient(rgba(0,0,0,0.05), rgba(0,0,0,0.05)), url('https://images.unsplash.com/photo-1606787366850-de6330128bfc?q=80&w=2070&auto=format&fit=crop') center/cover;">
+    <div class="hero-content text-center py-5 px-3">
+      <h1 class="display-5 fw-bold text-dark mb-2">
+        Welcome, <span class="text-success"><%= current_user.name.presence || current_user.email %></span>
+      </h1>
+      <p class="lead text-muted mb-3">What's cooking today?</p>
+      <div class="date-badge">
+        <i class="bi bi-calendar-check me-2"></i>
+        <%= Date.today.strftime("%A, %B %d") %>
+      </div>
+    </div>
+  </div>
+
+  <% if current_user.admin? %>
+    <%= render "dashboard/admin_menu_controls" %>
+  <% else %>
+    <div class="dashboard-card card border-0 shadow-sm overflow-hidden">
+      <div class="card-body p-4">
+        <% if @today_menu.present? %>
+          <!-- Menu Announcement -->
+          <div class="menu-announcement rounded-4 p-4 mb-4">
+            <div class="d-flex align-items-center">
+              <div class="announcement-icon me-3">
+                <i class="bi bi-megaphone"></i>
+              </div>
+              <div>
+                <h5 class="announcement-title mb-2">Today's Special</h5>
+                <p class="announcement-text mb-0"><%= @today_menu.description %></p>
+              </div>
+            </div>
+          </div>
+
+          <% if @existing_response.present? %>
+            <!-- Response Display -->
+            <div id="response-view">
+              <div class="mb-4">
+                <h5 class="response-title mb-3">
+                  <span class="response-icon">
+                    <i class="bi bi-check-circle"></i>
+                  </span>
+                  Your Selection
+                </h5>
+
+                <div class="response-grid">
+                  <!-- Snacks Card -->
+                  <div class="response-card <%= @existing_response.snacks ? 'card-success' : 'card-secondary' %>">
+                    <div class="card-body">
+                      <div class="card-icon text-success">
+                        <i class="bi bi-emoji-smile"></i>
+                      </div>
+                      <h6 class="card-label">Snacks</h6>
+                      <span class="card-badge <%= @existing_response.snacks ? 'badge-success' : 'badge-secondary' %>">
+                        <%= @existing_response.snacks ? "Yes" : "No" %>
+                      </span>
+                    </div>
+                  </div>
+
+                  <!-- Dinner Card -->
+                  <div class="response-card <%= @existing_response.dinner ? 'card-success' : 'card-secondary' %>">
+                    <div class="card-body">
+                      <div class="card-icon text-primary">
+                        <i class="bi bi-basket3"></i>
+                      </div>
+                      <h6 class="card-label">Dinner</h6>
+                      <span class="card-badge <%= @existing_response.dinner ? 'badge-success' : 'badge-secondary' %>">
+                        <%= @existing_response.dinner ? "Yes" : "No" %>
+                      </span>
+                    </div>
+                  </div>
+
+                  <% if @existing_response.chapatis_count.to_i > 0 %>
+                    <!-- Chapatis Card -->
+                    <div class="response-card card-warning">
+                      <div class="card-body">
+                        <div class="card-icon text-warning">
+                          <i class="bi bi-bread-slice"></i>
+                        </div>
+                        <h6 class="card-label">Chapatis</h6>
+                        <span class="card-badge badge-warning">
+                          <%= @existing_response.chapatis_count %>
+                        </span>
+                      </div>
+                    </div>
+                  <% end %>
+                </div>
+              </div>
+
+              <!-- Action Buttons -->
+              <div class="action-buttons">
+                <% if @today_menu.response_open? %>
+                  <button onclick="toggleEdit()" class="btn btn-edit">
+                    <i class="bi bi-pencil me-2"></i>Edit Selection
+                  </button>
+                <% else %>
+                  <button class="btn btn-edit-disabled" disabled>
+                    <i class="bi bi-pencil me-2"></i>Edit (Closed)
+                  </button>
+                <% end %>
+
+                <%= button_to menu_menu_response_path(@today_menu, @existing_response),
+                              method: :delete,
+                              data: { confirm: "Are you sure you want to delete your response?" },
+                              class: "btn btn-delete" do %>
+                  <i class="bi bi-trash me-2"></i>Delete
+                <% end %>
+              </div>
+            </div>
+
+            <!-- Edit Form (Hidden Initially) -->
+            <%= render "dashboard/edit_employee_response" %>
+
+          <% else %>
+            <!-- No Response Yet -->
+            <% if @today_menu.response_open? %>
+              <%= render "dashboard/employee_menu_response_form" %>
+            <% else %>
+              <div class="alert alert-closed">
+                <i class="bi bi-clock-history"></i>
+                <div>
+                  Response time has ended. You can no longer submit your meal preference for today's menu.
+                </div>
+              </div>
+            <% end %>
+          <% end %>
+        <% else %>
+          <!-- No Menu Available -->
+          <div class="no-menu">
+            <div class="no-menu-icon">
+              <i class="bi bi-calendar-x"></i>
+            </div>
+            <h5 class="no-menu-title">No Menu Today</h5>
+            <p class="no-menu-text">Our kitchen is closed today. Check back tomorrow!</p>
+            <button class="btn btn-notify">
+              <i class="bi bi-bell me-1"></i> Notify Me
+            </button>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+<script>
+  // Toggle between view and edit modes
+  function toggleEdit() {
+    const view = document.getElementById('response-view');
+    const edit = document.getElementById('response-edit');
+    if (!view || !edit) return;
+
+    const isEditing = edit.style.display === 'block';
+    view.style.display = isEditing ? 'block' : 'none';
+    edit.style.display = isEditing ? 'none' : 'block';
+
+    if (!isEditing) {
+      const dinnerCheckbox = document.getElementById("menu_response_dinner");
+      const chapatiField = document.getElementById("chapatis_field");
+      if (dinnerCheckbox && chapatiField) {
+        chapatiField.style.display = dinnerCheckbox.checked ? "block" : "none";
+      }
+    }
+  }
+
+  // Toggle chapati field based on dinner selection
+  document.addEventListener("DOMContentLoaded", () => {
+    const dinnerCheckbox = document.getElementById("menu_response_dinner");
+    const chapatiField = document.getElementById("chapatis_field");
+
+    function toggleChapatiField() {
+      if (!dinnerCheckbox || !chapatiField) return;
+
+      chapatiField.style.display = dinnerCheckbox.checked ? "block" : "none";
+      if (!dinnerCheckbox.checked) {
+        const chapatiInput = chapatiField.querySelector('input[type="number"]');
+        if (chapatiInput) chapatiInput.value = 0;
+      }
+    }
+
+    if (dinnerCheckbox) {
+      toggleChapatiField();
+      dinnerCheckbox.addEventListener("change", toggleChapatiField);
+    }
+  });
+</script>

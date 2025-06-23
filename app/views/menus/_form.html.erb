@@ -1,0 +1,35 @@
+<div class="card shadow-sm rounded-4 p-4 border-0 mb-4">
+  <h4 class="mb-3 text-success d-flex align-items-center">
+    <i class="bi bi-journal-plus me-2"></i> <%= @menu.persisted? ? "Edit Menu" : "Create New Menu" %>
+  </h4>
+
+  <%= form_with(model: @menu, local: true, html: { class: "needs-validation" }) do |form| %>
+    <% if @menu.errors.any? %>
+      <div class="alert alert-danger rounded-3">
+        <h5 class="alert-heading">
+          <%= pluralize(@menu.errors.count, "error") %> prevented this menu from being saved:
+        </h5>
+        <ul class="mb-0">
+          <% @menu.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div class="mb-3">
+      <%= form.label :description, "Menu Description", class: "form-label fw-semibold" %>
+      <%= form.text_area :description, rows: 3, class: "form-control rounded-3", placeholder: "E.g., Paneer curry, rice, salad..." %>
+    </div>
+
+    <div class="mb-3">
+      <%= form.label :menu_date, "Select Menu Date", class: "form-label fw-semibold" %>
+      <%= form.date_field :menu_date, value: form.object.menu_date || Date.today, class: "form-control rounded-3" %>
+    </div>
+
+
+    <div class="d-grid">
+      <%= form.submit(@menu.persisted? ? "Update Menu" : "Save Menu", class: "btn btn-success px-4 py-2") %>
+    </div>
+  <% end %>
+</div>

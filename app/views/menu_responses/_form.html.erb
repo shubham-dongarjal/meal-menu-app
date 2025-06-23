@@ -1,0 +1,67 @@
+<%= form_with(model: [@menu, @menu_response], local: true, html: { class: "needs-validation", novalidate: true }) do |form| %>
+  <% if @menu_response.errors.any? %>
+    <div class="alert alert-danger rounded-3 shadow-sm mb-4">
+      <h5 class="alert-heading"><%= pluralize(@menu_response.errors.count, "error") %> prevented submission:</h5>
+      <ul class="mb-0 ps-3">
+        <% @menu_response.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <!-- Snacks Checkbox -->
+  <div class="form-check form-switch mb-4 ps-0">
+    <div class="d-flex align-items-center">
+      <%= form.check_box :snacks, class: "form-check-input me-2", id: "menu_response_snacks" %>
+      <%= form.label :snacks, "🍪 Include Snacks?", class: "form-check-label fs-6 text-dark mb-0", for: "menu_response_snacks" %>
+    </div>
+  </div>
+
+  <!-- Dinner Checkbox -->
+  <div class="form-check form-switch mb-4 ps-0">
+    <div class="d-flex align-items-center">
+      <%= form.check_box :dinner, class: "form-check-input me-2", id: "menu_response_dinner" %>
+      <%= form.label :dinner, "🍛 Include Dinner?", class: "form-check-label fs-6 text-dark mb-0", for: "menu_response_dinner" %>
+    </div>
+  </div>
+
+  <!-- Chapatis Count -->
+  <div class="mb-4" id="chapatis_field">
+    <label for="menu_response_chapatis_count" class="form-label fw-semibold text-dark">🫓 Number of Chapatis</label>
+    <%= form.number_field :chapatis_count, 
+                          min: 0, 
+                          value: @menu_response.dinner? ? @menu_response.chapatis_count : 0,
+                          class: "form-control shadow-sm border-success-subtle" %>
+  </div>
+
+  <!-- Submit -->
+  <div class="d-grid mt-3">
+    <%= form.submit (@menu_response.persisted? ? "🔄 Update Response" : "✅ Submit Response"),
+                    class: "btn btn-success fw-semibold py-2 px-4 shadow-sm" %>
+  </div>
+<% end %>
+
+<!-- JavaScript to toggle chapati field -->
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const dinnerCheckbox = document.getElementById("menu_response_dinner");
+    const chapatiField = document.getElementById("chapatis_field");
+
+    function toggleChapatiField() {
+      if (dinnerCheckbox && chapatiField) {
+        chapatiField.style.display = dinnerCheckbox.checked ? "block" : "none";
+        if (!dinnerCheckbox.checked) {
+          const chapatiInput = chapatiField.querySelector('input[type="number"]');
+          if (chapatiInput) chapatiInput.value = 0;
+        }
+      }
+    }
+
+    toggleChapatiField();
+
+    if (dinnerCheckbox) {
+      dinnerCheckbox.addEventListener("change", toggleChapatiField);
+    }
+  });
+</script>

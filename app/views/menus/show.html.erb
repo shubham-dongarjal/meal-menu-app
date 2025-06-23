@@ -1,0 +1,33 @@
+<h2>Menu for <%= @menu.menu_date.strftime("%B %d, %Y") %></h2>
+<p><%= @menu.description %></p>
+
+<h3>Responses</h3>
+
+<% if @responses.any? %>
+  <table border="1" cellpadding="6">
+    <thead>
+      <tr>
+        <th>User</th>
+        <th>Snacks</th>
+        <th>Dinner</th>
+        <th>Chapatis</th>
+        <th>Submitted At</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @responses.each do |response| %>
+        <tr>
+          <td><%= response.user.name %></td>
+          <td><%= response.snacks ? "Yes" : "No" %></td>
+          <td><%= response.dinner ? "Yes" : "No" %></td>
+          <td><%= response.chapatis_count %></td>
+          <td><%= response.created_at.strftime("%I:%M %p") %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p>No responses yet.</p>
+<% end %>
+
+<%= link_to "Back to Dashboard", root_path %>

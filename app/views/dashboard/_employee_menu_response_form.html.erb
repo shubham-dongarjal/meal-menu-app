@@ -1,0 +1,176 @@
+<div class="response-form-card card border-0 shadow-sm rounded-4 overflow-hidden mt-4">
+  <!-- Card Header -->
+  <div class="card-header bg-white border-0 py-3 px-4">
+    <h4 class="mb-0 text-dark d-flex align-items-center">
+      <i class="bi bi-pencil-square text-success me-2 fs-4"></i> 
+      <span>Meal Preferences</span>
+    </h4>
+  </div>
+
+  <!-- Card Body -->
+  <div class="card-body p-4">
+    <%= form_with model: @menu_response,
+                  url: menu_menu_responses_path(@today_menu),
+                  data: { turbo: false },
+                  html: { class: "needs-validation", novalidate: true } do |form| %>
+
+      <!-- Snacks Toggle -->
+      <div class="form-switch-container mb-4 p-3 rounded-3 bg-light">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <i class="bi bi-emoji-smile text-warning me-2"></i>
+            <span class="fw-semibold">Snacks</span>
+          </div>
+          <div class="form-check form-switch mb-0">
+            <%= form.check_box :snacks, class: "form-check-input", id: "snacks_toggle" %>
+            <label class="form-check-label" for="snacks_toggle"></label>
+          </div>
+        </div>
+        <p class="small text-muted mt-1 mb-0">Include evening snacks with your meal</p>
+      </div>
+
+      <!-- Dinner Toggle -->
+      <div class="form-switch-container mb-4 p-3 rounded-3 bg-light">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <i class="bi bi-basket text-primary me-2"></i>
+            <span class="fw-semibold">Dinner</span>
+          </div>
+          <div class="form-check form-switch mb-0">
+            <%= form.check_box :dinner, class: "form-check-input", id: "dinner_toggle" %>
+            <label class="form-check-label" for="dinner_toggle"></label>
+          </div>
+        </div>
+        <p class="small text-muted mt-1 mb-0">Include main dinner with your meal</p>
+      </div>
+
+      <!-- Chapatis Count (Conditional) -->
+      <div id="chapatis_field" class="chapati-field mb-4 p-3 rounded-3 bg-light" style="display: none;">
+        <div class="d-flex align-items-center mb-2">
+          <i class="bi bi-bread-slice text-warning me-2"></i>
+          <label for="menu_response_chapatis_count" class="fw-semibold">Number of Chapatis</label>
+        </div>
+        <div class="input-group">
+          <%= form.number_field :chapatis_count, 
+                min: 0, max: 10, 
+                class: "form-control chapati-input", 
+                value: 0,
+                placeholder: "Enter quantity (0-10)" %>
+          <span class="input-group-text bg-white">pieces</span>
+        </div>
+        <p class="small text-muted mt-1 mb-0">How many chapatis would you like?</p>
+      </div>
+
+      <!-- Submit Button -->
+      <div class="d-grid mt-4">
+        <%= form.submit "Confirm Selection", 
+              class: "btn btn-submit fw-semibold py-3 shadow-sm",
+              data: { disable_with: "Submitting..." } %>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<style>
+  /* Form Card */
+  .response-form-card {
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease;
+  }
+  
+  .response-form-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.05);
+  }
+  
+  /* Form Switches */
+  .form-switch-container {
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+  }
+  
+  .form-switch-container:hover {
+    border-color: rgba(25, 135, 84, 0.2);
+    background-color: rgba(25, 135, 84, 0.03) !important;
+  }
+  
+  .form-check-input {
+    width: 2.5em;
+    height: 1.5em;
+  }
+  
+  .form-check-input:checked {
+    background-color: #198754;
+    border-color: #198754;
+  }
+  
+  /* Chapati Field */
+  .chapati-field {
+    transition: all 0.3s ease;
+  }
+  
+  .chapati-input {
+    border-color: #ffc107;
+  }
+  
+  .chapati-input:focus {
+    box-shadow: 0 0 0 0.25rem rgba(255, 193, 7, 0.25);
+    border-color: #ffc107;
+  }
+  
+  /* Submit Button */
+  .btn-submit {
+    background-color: #198754;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+  }
+  
+  .btn-submit:hover {
+    background-color: #157347;
+    transform: translateY(-2px);
+  }
+  
+  /* Icons */
+  .bi {
+    font-size: 1.25rem;
+  }
+</style>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const dinnerToggle = document.getElementById("dinner_toggle");
+    const chapatiField = document.getElementById("chapatis_field");
+    
+    function toggleChapatiField() {
+      if (dinnerToggle && chapatiField) {
+        chapatiField.style.display = dinnerToggle.checked ? "block" : "none";
+        if (!dinnerToggle.checked) {
+          document.getElementById("menu_response_chapatis_count").value = 0;
+        }
+      }
+    }
+    
+    if (dinnerToggle) {
+      // Initial check
+      toggleChapatiField();
+      
+      // Add event listener
+      dinnerToggle.addEventListener("change", toggleChapatiField);
+    }
+    
+    // Form validation
+    const form = document.querySelector('.needs-validation');
+    if (form) {
+      form.addEventListener('submit', function(event) {
+        if (!form.checkValidity()) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+        form.classList.add('was-validated');
+      }, false);
+    }
+  });
+</script>

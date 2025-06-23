@@ -1,0 +1,100 @@
+<div id="response-edit" style="display: none;" class="edit-response-container mb-4">
+  <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+    <!-- Card Header -->
+    <div class="card-header bg-white border-0 py-3 px-4">
+      <h5 class="mb-0 text-dark d-flex align-items-center">
+        <i class="bi bi-pencil-square text-success me-2 fs-5"></i> 
+        <span>Edit Meal Preferences</span>
+      </h5>
+    </div>
+
+    <!-- Card Body -->
+    <div class="card-body p-4">
+      <%= form_with(model: @existing_response,
+                    url: menu_menu_response_path(@today_menu, @existing_response),
+                    method: :patch,
+                    local: true,
+                    html: { class: "edit-response-form" }) do |form| %>
+
+        <!-- Snacks Toggle -->
+        <div class="form-switch-container mb-4 p-3 rounded-3 bg-light">
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <i class="bi bi-emoji-smile text-warning me-2"></i>
+              <span class="fw-semibold">Snacks</span>
+            </div>
+            <div class="form-check form-switch mb-0">
+              <%= form.check_box :snacks, class: "form-check-input", id: "menu_response_snacks" %>
+              <label class="form-check-label" for="menu_response_snacks"></label>
+            </div>
+          </div>
+          <p class="small text-muted mt-1 mb-0">Include evening snacks with your meal</p>
+        </div>
+
+        <!-- Dinner Toggle -->
+        <div class="form-switch-container mb-4 p-3 rounded-3 bg-light">
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <i class="bi bi-basket text-primary me-2"></i>
+              <span class="fw-semibold">Dinner</span>
+            </div>
+            <div class="form-check form-switch mb-0">
+              <%= form.check_box :dinner, class: "form-check-input", id: "menu_response_dinner" %>
+              <label class="form-check-label" for="menu_response_dinner"></label>
+            </div>
+          </div>
+          <p class="small text-muted mt-1 mb-0">Include main dinner with your meal</p>
+        </div>
+
+        <!-- Chapatis Count (Conditional) -->
+        <div id="chapatis_field" class="chapati-field mb-4 p-3 rounded-3 bg-light" style="display: <%= @existing_response.dinner? ? 'block' : 'none' %>;">
+          <div class="d-flex align-items-center mb-2">
+            <i class="bi bi-bread-slice text-warning me-2"></i>
+            <label for="menu_response_chapatis_count" class="fw-semibold">Number of Chapatis</label>
+          </div>
+          <div class="input-group">
+            <%= form.number_field :chapatis_count, 
+                  min: 0, max: 10, 
+                  class: "form-control chapati-input", 
+                  value: @existing_response.chapatis_count || 0,
+                  placeholder: "Enter quantity (0-10)" %>
+            <span class="input-group-text bg-white">pieces</span>
+          </div>
+          <p class="small text-muted mt-1 mb-0">How many chapatis would you like?</p>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="d-flex gap-3 mt-4">
+          <%= form.submit "Save Changes", 
+                class: "btn btn-save fw-semibold py-2 px-4 shadow-sm",
+                data: { disable_with: "Saving..." } %>
+          <button type="button" onclick="toggleEdit()" class="btn btn-cancel py-2 px-4">
+            Cancel
+          </button>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Initialize the form with proper chapati field visibility
+  document.addEventListener("DOMContentLoaded", function() {
+    const dinnerToggle = document.getElementById("menu_response_dinner");
+    const chapatiField = document.getElementById("chapatis_field");
+    
+    function toggleChapatiField() {
+      if (dinnerToggle && chapatiField) {
+        chapatiField.style.display = dinnerToggle.checked ? "block" : "none";
+      }
+    }
+    
+    if (dinnerToggle) {
+      // Initial check
+      toggleChapatiField();
+      
+      // Add event listener
+      dinnerToggle.addEventListener("change", toggleChapatiField);
+    }
+  });
+</script>

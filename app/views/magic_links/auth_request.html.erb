@@ -1,0 +1,13 @@
+<h2 class="text-center mb-4">🔗 Sign in via Email</h2>
+
+<%= form_with url: magic_link_path, method: :post, local: true, class: "w-100" do %>
+  <div class="mb-3">
+    <%= label_tag :email, "Email address", class: "form-label" %>
+    <%= email_field_tag :email, nil, placeholder: "you@example.com", required: true, class: "form-control" %>
+  </div>
+  <%= submit_tag "Send", class: "btn btn-primary w-100" %>
+<% end %>
+
+<p class="text-muted mt-3 text-center small">
+  You'll receive a login link in your email inbox.
+</p>

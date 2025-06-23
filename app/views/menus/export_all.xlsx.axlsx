@@ -1,0 +1,18 @@
+wb = xlsx_package.workbook
+wb.add_worksheet(name: "All Menus") do |sheet|
+  sheet.add_row ["Date", "Description", "User", "Snacks", "Dinner", "Chapatis", "Submitted At"]
+
+  @menus.each do |menu|
+    menu.menu_responses.each do |response|
+      sheet.add_row [
+        menu.menu_date.strftime("%Y-%m-%d"),
+        menu.description,
+        response.user.name.presence || response.user.email,
+        response.snacks ? "Yes" : "No",
+        response.dinner ? "Yes" : "No",
+        response.chapatis_count,
+        response.submitted_at&.strftime("%I:%M %p") || "-"
+      ]
+    end
+  end
+end

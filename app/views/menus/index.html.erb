@@ -1,0 +1,125 @@
+<h2 class="mb-4 text-success fw-bold text-center">🍽️ Menus & Responses</h2>
+
+<%= form_with url: menus_path, method: :get, local: true, class: "mb-4 row g-3 justify-content-center" do %>
+  <div class="col-auto">
+    <%= date_field_tag :menu_date, params[:menu_date] || Date.today, class: "form-control rounded shadow-sm" %>
+  </div>
+  <div class="col-auto">
+    <%= submit_tag "🔍 Filter", class: "btn btn-outline-success shadow-sm" %>
+  </div>
+<% end %>
+
+<div class="d-flex justify-content-end mb-3">
+  <div class="btn-group" role="group" aria-label="Export options">
+    <%= link_to "📤 Export Filtered", export_by_date_menus_path(menu_date: params[:menu_date] || Date.today, format: :xlsx), class: "btn btn-outline-primary btn-sm px-3" %>
+    <%= link_to "📦 Export All", export_all_menus_path(format: :xlsx), class: "btn btn-outline-secondary btn-sm px-3" %>
+  </div>
+</div>
+
+<% if @menus.any? %>
+  <% @menus.each do |menu| %>
+    <div class="card shadow-sm mb-4 border-success">
+      <div class="card-header d-flex justify-content-between align-items-center bg-light">
+        <strong class="text-success fs-5">
+          <i class="bi bi-calendar-event-fill me-1"></i> <%= menu.menu_date.strftime("%B %d, %Y") %>
+        </strong>
+        <div class="d-flex gap-2">
+          <% if menu.menu_date == Date.today %>
+            <%= link_to edit_menu_path(menu), class: "btn btn-sm btn-outline-success" do %>
+              <i class="bi bi-pencil-square"></i> Edit
+            <% end %>
+          <% end %>
+          <button type="button"
+                  class="btn btn-sm btn-outline-danger"
+                  data-bs-toggle="modal"
+                  data-bs-target="#deleteConfirmModal"
+                  data-menu-url="<%= menu_path(menu) %>"
+                  onclick="prepareDeleteForm(this)">
+            <i class="bi bi-trash-fill"></i> Delete
+          </button>
+        </div>
+      </div>
+
+      <div class="card-body">
+        <p><strong>Description:</strong> <%= menu.description %></p>
+
+        <% if menu.menu_responses.any? %>
+          <div class="alert alert-light border shadow-sm mb-3">
+                <strong>Summary:</strong>
+                <ul class="mb-0">
+                    <li><strong>Snacks:</strong> <%= menu.snacks_yes_count %> confirmed</li>
+                    <li><strong>Dinner:</strong> <%= menu.dinner_yes_count %> confirmed</li>
+                    <li><strong>Total Chapatis:</strong> <%= menu.total_chapatis %></li>
+                </ul>
+          </div>
+
+          </div>
+
+          <div class="table-responsive">
+            <table class="table table-hover table-bordered align-middle">
+              <thead class="table-success">
+                <tr>
+                  <th>User</th>
+                  <th>Snacks</th>
+                  <th>Dinner</th>
+                  <th>Chapatis</th>
+                  <th>Submitted At</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% menu.menu_responses.each do |response| %>
+                  <tr>
+                    <td><%= response.user.name.presence || response.user.email %></td>
+                    <td><%= response.snacks ? "✅" : "❌" %></td>
+                    <td><%= response.dinner ? "✅" : "❌" %></td>
+                    <td><%= response.chapatis_count %></td>
+                    <td><%= response.submitted_at&.strftime("%I:%M %p") || "-" %></td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
+        <% else %>
+          <p class="text-muted fst-italic">No responses yet for this menu.</p>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="d-flex justify-content-center mt-3">
+    <%= paginate @menus %>
+  </div>
+<% else %>
+  <p class="text-muted text-center">No menus found for the selected date.</p>
+<% end %>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteConfirmLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content shadow">
+      <div class="modal-header bg-danger text-white">
+        <h5 class="modal-title" id="deleteConfirmLabel">⚠️ Confirm Deletion</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Are you sure you want to <strong>delete</strong> this menu? This action cannot be undone.
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <form id="delete-form" method="post" class="d-inline">
+          <input type="hidden" name="_method" value="delete">
+          <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+          <button type="submit" class="btn btn-danger">Yes, Delete</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function prepareDeleteForm(button) {
+    const form = document.getElementById("delete-form");
+    const url = button.getAttribute("data-menu-url");
+    form.setAttribute("action", url);
+  }
+</script>

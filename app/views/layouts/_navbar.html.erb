@@ -1,0 +1,80 @@
+<nav class="navbar navbar-expand-lg navbar-dark shadow-sm mb-4 sticky-top" style="background: linear-gradient(135deg, #e67e22 0%, #d35400 100%);">
+  <div class="container">
+    <!-- Brand Logo -->
+    <a class="navbar-brand fw-bold d-flex align-items-center" href="/" style="letter-spacing: 0.5px;">
+  <span class="bg-white bg-opacity-20 p-2 rounded-circle me-2 d-flex align-items-center justify-content-center" style="width: 36px; height: 36px;">
+    <!-- Font Awesome Free Icon (choose one) -->
+    <i class="fas fa-utensils text-white"></i> <!-- Classic food icon -->
+    <!-- <i class="fas fa-hamburger text-white"></i> --> <!-- Burger -->
+    <!-- <i class="fas fa-pizza-slice text-white"></i> --> <!-- Pizza -->
+    <!-- <i class="fas fa-drumstick-bite text-white"></i> --> <!-- Chicken -->
+  </span>
+  <span class="text-white">MealApp</span>
+</a>
+
+    <!-- Mobile Toggle Button -->
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Navbar Content -->
+    <div class="collapse navbar-collapse justify-content-between" id="navbarNav">
+      <!-- Left Side Navigation -->
+      <ul class="navbar-nav me-auto">
+        <% if current_user&.admin? %>
+          <li class="nav-item me-2">
+            <%= link_to root_path, class: "nav-link d-flex align-items-center py-3 px-2 rounded-3" do %>
+              <i class="bi bi-speedometer2 me-2"></i>
+              <span>Admin Panel</span>
+            <% end %>
+          </li>
+          <li class="nav-item me-2">
+            <%= link_to menus_path, class: "nav-link d-flex align-items-center py-3 px-2 rounded-3" do %>
+              <i class="bi bi-menu-button-wide me-2"></i>
+              <span>Menus</span>
+            <% end %>
+          </li>
+        <% end %>
+      </ul>
+
+      <!-- Right Side User Info -->
+      <div class="d-flex align-items-center gap-2">
+        <% if current_user %>
+          <div class="dropdown">
+            <button class="btn btn-light dropdown-toggle d-flex align-items-center" type="button" id="userDropdown" 
+                    data-bs-toggle="dropdown" aria-expanded="false" style="background-color: rgba(255,255,255,0.9);">
+              <span class="bg-warning rounded-circle d-flex align-items-center justify-content-center me-2" 
+                    style="width: 32px; height: 32px; background-color: #f39c12;">
+                <i class="bi bi-person-fill text-white"></i>
+              </span>
+              <span class="d-none d-md-inline text-dark">
+                <%= current_user.name.presence || current_user.email.split('@').first %>
+              </span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="userDropdown">
+              <li>
+                <h6 class="dropdown-header text-dark fw-bold">
+                  <%= current_user.name.presence || current_user.email %>
+                </h6>
+              </li>
+              <li><hr class="dropdown-divider"></li>
+              <li>
+                <%= link_to edit_user_registration_path, class: "dropdown-item d-flex align-items-center" do %>
+                  <i class="bi bi-gear me-2" style="color: #e67e22;"></i> 
+                  <span>Account Settings</span>
+                <% end %>
+              </li>
+              <li>
+                <%= button_to destroy_user_session_path, method: :delete, 
+                             class: "dropdown-item d-flex align-items-center text-danger" do %>
+                  <i class="bi bi-box-arrow-right me-2"></i> Logout
+                <% end %>
+              </li>
+            </ul>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</nav>

@@ -1,0 +1,11 @@
+<div class="container mt-5">
+  <div class="card shadow p-4">
+    <h2 class="card-title mb-4">Edit Your Response</h2>
+
+    <%= render 'form', menu: @menu, menu_response: @menu_response %>
+
+    <div class="mt-3">
+      <%= link_to "Back", root_path, class: "btn btn-secondary" %>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,2 @@
+module MenuResponsesHelper
+end

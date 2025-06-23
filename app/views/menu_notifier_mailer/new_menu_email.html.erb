@@ -1,0 +1,19 @@
+<h2>Hi <%= @user.name.presence || @user.email %>,</h2>
+
+<p>We've created a new food menu for <strong><%= @menu.menu_date.strftime("%A, %B %d, %Y") %></strong>.</p>
+
+<p><strong>What's on the menu?</strong><br>
+<%= @menu.description %></p>
+
+<p>To confirm your participation, please use the secure link below:</p>
+
+<p style="margin: 20px 0;">
+  <a href="<%= @magic_link %>" style="display: inline-block; padding: 10px 20px; background-color: #28a745; color: white; text-decoration: none; border-radius: 5px;">
+    Respond to the Menu
+  </a>
+</p>
+
+<p>This link is valid for 15 minutes and will log you in automatically.</p>
+
+<p>Bon appétit! 🍽️<br>
+Your Food Team</p>

@@ -1,0 +1,91 @@
+<div class="food-auth-wrapper">
+  <div class="food-auth-container">
+    <!-- Left Side - Food Image -->
+    <div class="food-auth-image d-none d-lg-block">
+      <div class="food-image-overlay"></div>
+      <div class="food-auth-quote">
+        <h2 class="display-6 fw-bold text-white">Good food, good mood</h2>
+        <p class="text-white-50">Sign in to explore delicious food</p>
+      </div>
+    </div>
+
+    <!-- Right Side - Login Form -->
+    <div class="food-auth-form">
+      <div class="food-form-container">
+        <!-- Mobile Logo -->
+        <h2 class="food-form-title">Welcome back!</h2>
+        <p class="food-form-subtitle mb-4">Sign in to your account</p>
+
+        <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+          <!-- Email Field -->
+          <div class="mb-3">
+            <label class="food-form-label">
+              <i class="bi bi-envelope me-2"></i>Email Address
+            </label>
+            <%= f.email_field :email, class: "food-form-control", placeholder: "your@email.com", autofocus: true, autocomplete: "email" %>
+          </div>
+
+          <!-- Password Field -->
+          <div class="mb-3 position-relative">
+            <label class="food-form-label">
+              <i class="bi bi-lock me-2"></i>Password
+            </label>
+            <%= f.password_field :password, class: "food-form-control pe-5", id: "password", placeholder: "••••••••", autocomplete: "current-password" %>
+            <button type="button" class="food-password-toggle" id="togglePassword">
+              <i class="bi bi-eye"></i>
+            </button>
+          </div>
+
+          <!-- Remember Me & Forgot Password -->
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <% if devise_mapping.rememberable? %>
+              <div class="form-check">
+                <%= f.check_box :remember_me, class: "form-check-input", id: "rememberMe" %>
+                <%= f.label :remember_me, "Remember me", class: "form-check-label small", for: "rememberMe" %>
+              </div>
+            <% end %>
+            
+            <% if devise_mapping.recoverable? %>
+              <%= link_to "Forgot password?", new_password_path(resource_name), class: "small food-link" %>
+            <% end %>
+          </div>
+
+          <!-- Submit Button -->
+          <%= f.submit "Sign In", class: "food-auth-btn w-100 mb-3" %>
+        <% end %>
+
+
+        <div class="text-center mt-3">
+          <%= link_to "Login via Email", auth_email_path, class: "btn btn-outline-primary" %>
+        </div>
+
+
+      
+
+        <!-- Sign Up Link -->
+        <div class="text-center mt-4">
+          <p class="food-text">Don't have an account? <%= link_to "Sign up", new_registration_path(resource_name), class: "food-link fw-semibold" %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+  // Password visibility toggle
+  document.getElementById('togglePassword').addEventListener('click', function() {
+    const password = document.getElementById('password');
+    const icon = this.querySelector('i');
+    
+    if (password.type === 'password') {
+      password.type = 'text';
+      icon.classList.remove('bi-eye');
+      icon.classList.add('bi-eye-slash');
+    } else {
+      password.type = 'password';
+      icon.classList.remove('bi-eye-slash');
+      icon.classList.add('bi-eye');
+    }
+  });
+</script>
