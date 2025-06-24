@@ -1,5 +1,5 @@
 class MenuNotifierMailer < ApplicationMailer
-  default from: 'shubhamdongarjal15@gmail.com' 
+  default from: 'yourmail' 
 
   def new_menu_email(user, menu)
     @user = user
