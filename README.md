@@ -53,29 +53,17 @@ Employees can log in via **magic links or Google**, view daily menus, and submit
 git clone https://github.com/YOUR_USERNAME/meal-menu-app.git
 cd meal-menu-app
 2. Install Dependencies
-bash
-Copy
-Edit
 bundle install
 yarn install # if using js bundling
 3. Set up the Database
-bash
-Copy
-Edit
 rails db:create db:migrate
 4. Start the Server
-bash
-Copy
-Edit
 rails server
 Visit: http://localhost:3000
 
 🔐 Environment Setup
 Create a .env file for local environment variables:
 
-dotenv
-Copy
-Edit
 GMAIL_USERNAME=your_gmail@gmail.com
 GMAIL_PASSWORD=your_gmail_app_password
 DEVISE_SECRET_KEY=your_devise_secret
